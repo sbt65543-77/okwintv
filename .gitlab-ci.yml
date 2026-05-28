@@ -1,0 +1,14 @@
+stages:
+  - deploy
+
+deploy_client_lives:
+  stage: deploy
+  image: alpine:latest
+  only:
+    - develop
+
+  before_script:
+    - apk add --no-cache openssh sshpass
+
+  script:
+    - sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no root@109.123.236.89 "cd /var/www/html/client_lives && git pull origin develop && docker compose up -d --build"
